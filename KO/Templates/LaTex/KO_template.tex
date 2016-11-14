@@ -1,0 +1,192 @@
+%% KO_template.tex
+%% V2015
+%% by Jan Dvořák
+%% based on
+%% bare_conf.tex
+%% V1.3
+%% 2007/01/11
+%% by Michael Shell
+
+%%*************************************************************************
+%% Legal Notice:
+%% This code is offered as-is without any warranty either expressed or
+%% implied; without even the implied warranty of MERCHANTABILITY or
+%% FITNESS FOR A PARTICULAR PURPOSE! 
+%% User assumes all risk.
+%% In no event shall IEEE or any contributor to this code be liable for
+%% any damages or losses, including, but not limited to, incidental,
+%% consequential, or any other damages, resulting from the use or misuse
+%% of any information contained here.
+%%
+%% All comments are the opinions of their respective authors and are not
+%% necessarily endorsed by the IEEE.
+%%
+%% This work is distributed under the LaTeX Project Public License (LPPL)
+%% ( http://www.latex-project.org/ ) version 1.3, and may be freely used,
+%% distributed and modified. A copy of the LPPL, version 1.3, is included
+%% in the base LaTeX documentation of all distributions of LaTeX released
+%% 2003/12/01 or later.
+%% Retain all contribution notices and credits.
+%% ** Modified files should be clearly indicated as such, including  **
+%% ** renaming them and changing author support contact information. **
+%%
+%% File list of work: IEEEtran.cls, IEEEtran_HOWTO.pdf, bare_adv.tex,
+%%                    bare_conf.tex, bare_jrnl.tex, bare_jrnl_compsoc.tex
+%%*************************************************************************
+
+
+%%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+%%
+%% Remove all itemize environments and replace them by your own text! 
+%%
+%%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+\documentclass[onecolumn, conference]{IEEEtran}
+
+% Uncomment for seminar work in czech language
+%\usepackage[czech]{babel}
+
+%Uncomment for setting up your encoding (according to *.tex encoding you use)
+%\usepackage[latin2]{inputenc} %for windows users
+%\usepackage[utf8]{inputenc} %for linux users
+
+\newcommand{\firstDeadline}{Deadline: 09.03.\,\the\year}
+\newcommand{\secondDeadline}{Deadline: 23.03.\,\the\year}
+\newcommand{\fourthDeadline}{Deadline: 04.05.\,\the\year}
+\newcommand{\range}[2][0]{Range: #1 to #2 page} 
+\newcommand{\conciseItem}{\itemsep1pt \parskip0pt \parsep0pt}
+
+\begin{document}
+%
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+\title{Paper Title}
+
+
+% author names and affiliationsb
+% use a multiple column layout for up to three different
+% affiliations
+\author{\IEEEauthorblockN{Authors Name}
+\IEEEauthorblockA{
+Day and time of your parallel class\\
+\textit{Study programme}\\
+\textit{E-mail address}}
+}
+
+% make the title area
+\maketitle
+\begin{abstract}
+\bf
+This electronic document is a ``live'' template and already defines the components of your paper [title, text, heads, etc.] in its style sheet.
+\end{abstract}
+
+
+\section{Assignment}
+\subsection{Problem Statement}
+\begin{itemize}
+	\conciseItem
+	\item The concise and unambiguous description of your original problem
+	\item Do not forget: If there are more seminar works dealing with the same topic, the points will be proportionately reduced.
+	\item \range[0.3]{1}
+	\item \firstDeadline~(dd.mm\,yyyy)
+\end{itemize}
+\subsection{Problem Categorization}
+\begin{itemize}
+	\conciseItem
+	\item The categorization of the problem and subproblems (if there are any)
+	\item \range[0.2]{0.5}
+	\item \firstDeadline
+\end{itemize}
+
+\section{Related works}
+\begin{itemize}
+	\conciseItem
+	\item Continuous text with references to the literature (at least 3 relevant scientific articles) including correct citations. For example papers\cite{RW:Eason, RW:Clerk, RW:Jacobs, RW:Elissa, RW:Nicole}.
+	\item \range[0.3]{0.5}
+	\item \secondDeadline
+\end{itemize}
+
+
+\section{Problem solution}
+\subsection{Design}
+\begin{itemize}
+	\conciseItem
+	\item The idea and the design of your solution. Reasons why you choose your method.
+	\item \range[0.2]{0.5}
+	\item \secondDeadline
+\end{itemize}
+\subsection{Implementation}
+\begin{itemize}
+	\conciseItem
+	\item Implementation details of your algorithm. ILP problem formulation/description of heuristics/important non-trivial data structures etc.
+	\item \range[0.5]{1}
+	\item \fourthDeadline
+\end{itemize}
+\section{Experiments}
+\subsection{Benchmark Settings}
+\begin{itemize}
+	\conciseItem
+	\item Description of benchmark instances, testing methodology, environment (CPU, Memory, OS, etc.)
+	\item \range[0.3]{0.5}
+	\item \fourthDeadline
+\end{itemize}
+\subsection{Results}
+\begin{itemize}
+	\conciseItem
+	\item Presentation of the results(tables, charts etc.) of your quality, performance/execution time, memory complexity experiments and its description.
+	\item \range[0.7]{1.2}s
+	\item \fourthDeadline
+\end{itemize}
+\subsection{Discussion}
+\begin{itemize}
+	\conciseItem
+	\item Discussion of the results. Comparison of the results with the state-of-the-art. Description of expected and unexpected phenomena in the results etc.
+	\item \range[0.2]{0.5}
+	\item \fourthDeadline
+\end{itemize}
+
+\section{Conclusion}
+\begin{itemize}
+	\conciseItem
+	\item Conclusion of the seminar work.
+	\item \range[0.2]{0.3}
+	\item \fourthDeadline
+\end{itemize}
+
+
+
+% references section
+
+% can use a bibliography generated by BibTeX as a .bbl file
+% BibTeX documentation can be easily obtained at:
+% http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
+% The IEEEtran BibTeX style support page is at:
+% http://www.michaelshell.org/tex/ieeetran/bibtex/
+%\bibliographystyle{IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+%\bibliography{IEEEabrv,../bib/paper}
+%
+% <OR> manually copy in the resultant .bbl file
+% set second argument of \begin to the number of references
+% (used to reserve space for the reference number labels box)
+\begin{thebibliography}{1}
+
+\bibitem{RW:Eason}
+G. Eason, B. Noble, and I.N. Sneddon, \emph{“On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,“} Phil. Trans. Roy. Soc. London, vol. A247, pp. 529-551, April 1955. (references)
+
+\bibitem{RW:Clerk}
+J. Clerk Maxwell, \emph{"A Treatise on Electricity and Magnetism,"} 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68-73.
+
+\bibitem{RW:Jacobs}
+I.S. Jacobs and C.P. Bean, \emph{“Fine particles, thin films and exchange anisotropy,”} in Magnetism, vol. III, G.T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271-350.
+
+\bibitem{RW:Elissa}
+K. Elissa, \emph{“Title of paper if known,”} unpublished.
+
+\bibitem{RW:Nicole}
+R. Nicole, \emph{“Title of paper with only first word capitalized,”} J. Name Stand. Abbrev., in press.
+
+\end{thebibliography}
+\end{document}

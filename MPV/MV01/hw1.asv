@@ -1,0 +1,34 @@
+close all;
+
+sigma = 6.0;
+x = [-ceil(3.0*sigma):ceil(3.0*sigma)];
+G = gauss(x, sigma);
+
+figure;
+plot(x, G, x, G, 'rx'); grid on;
+title('Gaussian, sigma 6.0');
+
+D = dgauss(x, sigma);
+
+figure;
+plot(x, D, x, D, 'rx'); grid on;
+title('Derivace gaussianu, sigma 6.0');
+
+
+imp = zeros(51); imp(25,25) = 255;
+out = conv2(D,conv2(G,D),imp);
+figure;
+imagesc(out);%surf(out);
+
+in = im2double(imread('cameraman.jpg'));
+Ifiltr = gaussfilter(in, sigma);
+
+figure;
+
+subplot(1,2,1)
+imagesc(in), title('Vstupni obraz'); colormap gray; axis image;
+
+subplot(1,2,2)
+imagesc(Ifiltr), title('Vystupni obraz'); colormap gray; axis image;
+
+affinetr(img, affine(2,1,4,2,17,3), 41, 3);

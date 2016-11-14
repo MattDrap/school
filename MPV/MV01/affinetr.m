@@ -1,0 +1,13 @@
+function [out] = affinetr(in,A,ps,ext)
+%UNTITLED Summary of this function goes here
+%   Detailed explanation goes here
+ h = linspace(-ext, ext, ps);
+ x = repmat(h, ps, 1 );
+ y = repmat(h', 1,  ps);
+
+ out = A(1,1)*x + A(1,2)*y + A(1,3);
+ out2 = A(2,1)*x + A(2,2)*y + A(2,3);
+ 
+ out = interp2(in, out, out2);
+end
+

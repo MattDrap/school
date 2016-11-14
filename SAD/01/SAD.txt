@@ -1,0 +1,11 @@
+2. Overfitting bude více u dat s šumem,
+protože se klasifikátor bude uèit špatné pøíklady a na špatných pøíkladech vyvodí
+,sice s nulovou trénovací chybou, ale klasifikátor, který daný model nezobecòuje.
+U konjunkce s prefer_long (s více parametry) je vìtší šance na overfitting,
+jelikož fitujeme složitìjší model (napø. snažíme se nafitovat data z x^2 na náš model x^3).
+Navíc s daným šumem v datech se nám mùže podaøit natrénovat náš složitìjší model s min. train error,
+což je pøispívá k dalšímu overfittingu. Dále k tomu také pøispívá strukturální èást chyby (less biass - broader F)
+3. Pro modely s malými konjunkcemi dochází naopak k underfittingu, protože se nedokážeme nauèit koncept
+na našem jednoduchém modelu.
+Poté lze vidìt, že pøi více konjukncích trénovací chyba klesá,
+ ale za cenu možného overfittingu, pokud bychom napø. preferovali delší nebo mìli šum v pøíkladech.

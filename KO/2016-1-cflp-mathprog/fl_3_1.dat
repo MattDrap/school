@@ -1,0 +1,17 @@
+data;
+
+param numFacilities := 3;
+param numCustomers := 4;
+
+param : costs capacities facilityXs facilityYs :=
+0 100 100 1065.000000 1065.000000
+1 100 100 1062.000000 1062.000000
+2 100 500 0.000000 0.000000;
+
+param : demands customerXs customerYs :=
+0 50 1397.000000 1397.000000
+1 50 1398.000000 1398.000000
+2 75 1399.000000 1399.000000
+3 75 586.000000 586.000000;
+
+end;

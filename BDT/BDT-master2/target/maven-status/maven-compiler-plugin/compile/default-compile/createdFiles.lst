@@ -1,0 +1,8 @@
+cz\cvut\bigdata\wordcount2\WordCount2.class
+cz\cvut\bigdata\cli\ConfiguredTool.class
+cz\cvut\bigdata\wordcount2\WordCount2$WordCount2Comparator.class
+cz\cvut\bigdata\wordcount2\WordCount2$WordCount2Mapper.class
+cz\cvut\bigdata\wordcount2\DocTfWritable.class
+cz\cvut\bigdata\wordcount2\WordCount2$WordCount2Reducer.class
+cz\cvut\bigdata\cli\ArgumentParser.class
+cz\cvut\bigdata\wordcount2\WordCount2$WordLengthPartitioner.class

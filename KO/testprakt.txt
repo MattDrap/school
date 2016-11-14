@@ -1,0 +1,56 @@
+param n, integer, > 0;
+param m, integer, > 0;
+param R, integer, > 0;
+param k, integer, >= 0;
+param h, integer, >= 0;
+
+set StorageMonth:=1..n;
+set Factories:=1..m;
+set MonthConsumption:=1..n;
+
+param u {i in Factories}; 
+param d {i in MonthConsumption};
+param c {i in Factories, j in StorageMonth};
+
+set StorageMonthSp:= 1..n+1;
+
+var x{i in Factories, j in StorageMonth}, integer, >= 0;
+var y{j in MonthConsumption}, integer >= 0;
+var s{i in StorageMonthSp}, integer, >= 0;
+
+minimize total: (sum{i in Factories, j in StorageMonth} c[i, j]*x[i, j]) + sum{i in StorageMonth} h*s[i+1];
+s.t. caps {i in Factories, j in StorageMonth}: x[i,j] <= u[i];
+s.t. cons {i in StorageMonth}: y[i] = d[i];
+s.t. kir {j in StorageMonth}: sum{i in Factories} x[i,j] + s[j] - y[j] - s[j+1] = 0;
+
+s.t. stor {i in StorageMonth}: s[i+1] <= R;
+s.t. storK: s[1] = k;
+
+solve;
+
+data;
+
+
+param n := 2;
+param m := 2;
+param R:=15;
+param k:=6;
+param h:=3;
+param u:=
+1 7
+2 14
+;
+
+
+param d := 
+    1 12
+    2 20
+;
+
+param c:= 
+1 1 12
+1 2 18
+2 1 14
+2 2 20
+    
+;

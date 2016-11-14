@@ -1,0 +1,26 @@
+2) Alogritmus s 2x2 determinantem bude vždy dávat lepší výsledky, protože zahrnuje menší výpoèet,
+ tím se stane, že se nám nenasèítá tak moc chyb v plovoucí èárce jako v 3x3. Dle mého názoru, je mnohem horší
+ když bude algoritmus vracet vpravo, když má být vlevo, než když takový který vrací žlutou oblast, tedy rovnì.
+ Protože takový algoritmus by byl nespolehlivý.
+ 
+ Nejdrastièìji mùžeme vidìt chybu u pivotu A, protože A je nejvzdálenìjší od všech ostatních bodù v pomìru exponentù,
+musíme posuntou vždy o 5 bitù doprava a poté násobit,
+tudíž tam dojde k nejvìtším posunùm pøi operacích a tedy nejvìtším ztrátám.
+
+3)Oproti naivní implementaci exact a adaptive predikáty jsou mnohem pøesnìjší. Dochází u nich ale k složitìjším vypoètùm.
+Jako zjištování velikosti chyby apod.K chybám dochází v exactSchew u operací s pøesnosti od -54.
+ Výpoèet nezáleží na zvoleném pivotu.
+
+4)V metodì Two_Diff_Tail pøi práci s exp < -53 dochází ke ztrátì tailù, ztrácíme pøesnost.
+  Z toho dùvodu se tvoøí vìtší a vìtší oblasti.
+
+5)Napø. V orient2dadapt pøi se postupnì ztrácí pøesnost pøi výpoètu,
+ u Two_Product(acx, bcy, detleft, detlefttail); není nulový detlefttail,
+ který nastaví v Two_Two_Diff(detleft, detlefttail, detright, detrighttail, B3, B[2], B[1], B[0]);
+ kladnou hodnotu u B[1], která zmìní výpoèet det tak,
+ že det nebude nulový, což nakonec vrátí nenulovou hodnotu a vznikne predikát LEFT_TURN namísto STRAIGHT.
+
+6) naive - nejrychlejší. Provede se výpoèet (vynásobení a sèítání) a skonèí, ale s chybami.
+   adaptive - Pomalejší, kvùli kontrolám. Kontroluje zdali je error vysoký - dopoèítává dále.
+ Prakticky není potøeba poèítat chybu vždy až do konce.
+exact - nejpomalejší. vždy dopoèítává chybu až do konce.
