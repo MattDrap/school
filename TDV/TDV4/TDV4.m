@@ -11,6 +11,7 @@ addpath('../toolbox');
 addpath('../ba');
 addpath('../corresp')
 addpath('../p3p');
+addpath('../@ge_vrml');
 
 if( ~exist( 'p5gb', 'file' ) )
   error( 'Cannot find five-point estimator. Probably PATH is not set.' );
@@ -20,14 +21,14 @@ end
 load('UAll.mat');
 %%
 %Pick middle in images
-pick1 = 7;
-pick2 = 8;
+pick1 = 5;
+pick2 = 6;
 
 %Compute first pair of cameras
 load('Corr.mat');
 u = matchmatrix{pick1, pick2};
 num_cameras = 12;
-[R, t,F,inl] = ransac_e(matchmatrix{pick1, pick2}, K, 2.5, 0.9);
+[R, t,F,inl] = ransac_e(matchmatrix{pick1, pick2}, K, 2.5, 0.95);
 P1 = [eye(3,3), zeros(3,1)];
 P2 = R*[eye(3,3), t];
 %%
@@ -92,7 +93,7 @@ while(true)
 
     Xw = Xcloud(:, Xu(:, 1));
     u = U(:, Xu(:, 2));
-    [R, t, inl] = ransac_p3p(Xw, u, K, 2.5, 0.95);
+    [R, t, inl] = ransac_p3p(Xw, u, K, 5, 0.95);
     cameraSet{i} = [R, t];
     
     %Obtain the i-th camera pose (R;t) and a set of inliers using the scene-to-image correspondences in Xu.
@@ -110,15 +111,15 @@ while(true)
         U2 = U_all{ic};
         u = e2p( U(:, m(:, 1)) );
         u2 = e2p( U2(:, m(:, 2)) );
+        
+        %Proj err correction?
+        F = vgg_F_from_P(K*cameraSet{i}, K*cameraSet{ic});
+        [u, u2] = u_correct_sampson(F, u, u2);
 
         Xall_icam = Pu2X(K*cameraSet{i}, K*cameraSet{ic}, u, u2);
         
-        proj_x1 =  K*cameraSet{i} * Xall_icam;
-        inl1 = proj_x1(3, :) > 0;
-        proj_x2 =  K*cameraSet{ic} * Xall_icam;
-        inl2 = proj_x2(3, :) > 0;
-        
-        %Proj err TODO?
+        inl1 = getDepth(K*cameraSet{i}, Xall_icam) > 0;
+        inl2 = getDepth(K*cameraSet{ic}, Xall_icam) > 0;
         
         pre_inl = inl1 & inl2;
         inl = find(pre_inl);
@@ -143,10 +144,11 @@ while(true)
         U_ind = Xu(Xu_tentative, 2);
         
         u = U(:, U_ind);
+        in_front = getDepth(K*cameraSet{ic}, X) > 0; 
         proj_X = K*cameraSet{ic} * e2p(X);
         
         e = sum( ( u - p2e(proj_X) ).^2 );
-        inl = e < 6;
+        inl = in_front & e < 6;
         corr_ok = Xu_tentative(inl); % The subset of good points|there is no one here.
         corresp = corresp_verify_x( corresp, ic, corr_ok );
         
@@ -160,10 +162,30 @@ end
 %%
 figure;
 hold on;
+Cs = zeros(3, 12);
+ViewDirs = zeros(3, 12);
+
 for i = 1:length(cameraAppendNum)
     P = cameraSet{cameraAppendNum(i)};
-    C = -P(:, 1:3)' * P(:, 4);
-    ViewDir = P(3, 1:3);
-    plot3([C(1) ViewDir(1)], [C(2) ViewDir(2)], [C(3) ViewDir(3)], 'k');
-    plot3([C(1)], [C(2)], [C(3)], 'bo');
+    Cs(:, i) = -P(:, 1:3)' * P(:, 4);
+    ViewDirs(:, i) = P(3, 1:3) / norm(P(3, 1:3));
+    plot3([Cs(1, i) ViewDirs(1, i)], [Cs(2, i) ViewDirs(2, i)], [Cs(3, i) ViewDirs(3, i)], 'k');
+    plot3(Cs(1, i), Cs(2, i), Cs(3, i), 'bo');
+    text(Cs(1, i), Cs(2, i), Cs(3, i), sprintf('%d(%d)',i, cameraAppendNum(i)));
 end
+for i = 1:length(cameraAppendNum) - 1
+    if i == 1
+        plot3([Cs(1, i) Cs(1, i + 1)], [Cs(2, i) Cs(2, i + 1)], [Cs(3, i) Cs(3, i + 1)], 'r');
+    else
+        plot3([Cs(1, i) Cs(1, i + 1)], [Cs(2, i) Cs(2, i + 1)], [Cs(3, i) Cs(3, i + 1)], 'b');
+    end
+end
+%plot3(Xcloud(1, :), Xcloud(2, :), Xcloud(3, :), 'kx');
+%%
+Rt = cameraSet;
+
+ge = ge_vrml( 'out.wrl' );
+ge = ge_cams( ge, Rt, 'plot', 1 );  % P is a cell matrix containing cameras without K,
+                                    % { ..., [R t], ... }
+ge = ge_points( ge, Xcloud );       % Xcloud contains euclidean points (3xn matrix)
+ge = ge_close( ge );

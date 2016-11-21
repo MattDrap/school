@@ -18,10 +18,15 @@ par.file_dirs = tempNames;
 files = par.file_list{1};
 [GT, GTmask] = Sat2Im(files{40}, par); %[1, 16] [1, 40], [4, 16], [4, 19], [4, 31]
 files = par.file_list{4};
-name = files{37};
+name = files{36};
 [IM, IMmask] = Sat2Im(name, par); %25, 26, 27 .. [2, 30], i[3, 5],i[3,6], i[4, 20], i[4, 22], vi[4, 24], b[4, 25, 26, 36, 37], i[4, 29,30, 35], lb[4, 32], cb[4, 33]
 mGT = rgb2gray(GT);
 mIM = rgb2gray(IM);
+
+mGT = mGT(1:end, 1251:end);
+GTmask = GTmask(1:end, 1251:end);
+mIM = mIM(1:end, 1251:end);
+IMmask = IMmask(1:end, 1251:end);
 
 [folder, name, ext] = fileparts(name);
 dot_ind = strfind(name, '.');

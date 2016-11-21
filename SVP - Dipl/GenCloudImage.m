@@ -18,7 +18,7 @@ function [ nimg, cloud_mask ] = GenCloudImage( img, metaballs, par )
     for i = 1:H
         for j=1:W
             dists = sqrt(sum((repmat([j, i], num_of_metaballs, 1) - [metaballs(:, 1:2)]).^2, 2));
-            lookup = dists <= metaballs(:, 3);
+            lookup = dists < metaballs(:, 3);
             ballsR = metaballs(:, 3);
             f = -4/9.*(dists ./ ballsR).^6 + 17/9*(dists ./ ballsR).^4 ...
                - 22/9*(dists ./ ballsR).^2 + 1;

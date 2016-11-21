@@ -14,51 +14,55 @@ angle0 = ((90 - par.sun_elevation) * pi )/ 180;
 
 metaClouds = [];
 metaErrs = [];
-
-for num_meta = 1:max_metaClouds
+num_meta = 1;
+while num_meta <= max_metaClouds
     
     probGT = I;
     probGT(CloudImage_mask ~= 2) = 0;
     
     metaErrs(num_meta) = sum( (I(:) - CloudImage(:)).^2 ) ...
                         / (size(I, 1) * size(I, 2));
-    if metaErrs(num_meta) < 5
+    if metaErrs(num_meta) < 6
         break;
     end
     
     [val, ind] = max( probIm(:) );
-    [mi, mj] = ind2sub(size(probIm), ind);
+    [row, col] = ind2sub(size(probIm), ind);
     
-    center = [mi, mj];
+    center = [row, col];
     
-    initDensity = ( double(probIm(mi, mj)) -  par.k1 * double(GrayGT(mi, mj) ) ) / (3 * Isun * angle0 * par.k2 );
+    initDensity = ( double(probIm(row, col)) -  par.k1 * double(GrayGT(row, col) ) ) / (Isun * angle0 * par.k2 );
     
     [maxradius, density] = MinimizeMetaball(probGT, probIm, center, initDensity , par);
 
     if density == 0
-        num_meta = num_meta - 1;
-        probIm(mi, mj) = 0;
+        probIm(row, col) = 0;
+        'Zero density or radius'
         continue;
     end
     
-    up_radius = maxradius + par.raise_crop;
-    row1 = floor(mj - up_radius/2);
-    col1 = floor(mi - up_radius/2);
+    ymin = floor(row - maxradius);
+    xmin = floor(col - maxradius);
     
-    subGT = imcrop(I, [row1, col1, up_radius, up_radius]);
-    metaClouds(num_meta, :) = [mj, mi, maxradius, density];
+    maxdiameter = 2 * maxradius;
+    
+    subGT = imcrop(I, [xmin, ymin, maxdiameter, maxdiameter]);
+    metaClouds(num_meta, :) = [col, row, maxradius, density];
     %GrayGT = GenCloudImage(GrayGT, metaClouds);
-    CImage = GenCloudImage(subGT, double( [ size(subGT, 2)/2, size(subGT, 1)/2, metaClouds(end, 3:4) ]), par );
-    t1 = col1:col1+up_radius;
-    t2 = row1:row1+up_radius;
+    [CImage, cloud_mask] = GenCloudImage(subGT, double( [ size(subGT, 2)/2, size(subGT, 1)/2, metaClouds(end, 3:4) ]), par );
+    xvec = xmin:xmin+ceil(maxdiameter);
+    yvec = ymin:ymin+ceil(maxdiameter);
     
-    t1(t1 > size(I, 1)) = [];
-    t2(t2 > size(I, 2)) = [];
-    t1(t1 < 1) = [];
-    t2(t2 < 1) = [];
+    xvec(xvec > size(I, 2)) = [];
+    yvec(yvec > size(I, 1)) = [];
+    xvec(xvec < 1) = [];
+    yvec(yvec < 1) = [];
     
-    I(t1, t2) = CImage;
-    probIm(t1, t2) = probIm(t1, t2) - CImage;
+    I(yvec, xvec) = CImage;
+    cloud_white = uint8( cloud_mask .* Isun );
+    probIm(yvec, xvec) = probIm(yvec, xvec) - cloud_white;
+    probIm(row, col) = 0;
     fprintf('Metaball %d/%d \n', num_meta, max_metaClouds);
+    num_meta = num_meta + 1;
 end
 end

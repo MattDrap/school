@@ -9,9 +9,7 @@ par.global_normalization_trim = 0.01;
 par.allow_incomplete_feature_vectors = false;
 
 %Cloud Approximation
-par.max_metaClouds = 3500;
-par.raise_crop = 5;
-par.max_radius = Inf;
+par.max_metaClouds = 100;
 par.init_radius = 8;
 
 par.k2 = 0.01;

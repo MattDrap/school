@@ -2,16 +2,18 @@ function [ err ] = OptimizeMetaball( probGT, probIm, radius, density, center, pa
 %OptimizeMetaball Optimization of metaball parameters
 %   Detailed explanation goes here
 
-up_radius = radius + par.raise_crop;
+diameter = 2 * radius;
 
-row1 = floor(center(2) - (up_radius)/2);
-col1 = floor(center(1) - (up_radius)/2);
-subGT = imcrop(probGT, [row1, col1, up_radius, up_radius]);
+ymin = floor(center(1) - radius);
+xmin = floor(center(2) - radius);
+subGT = imcrop(probGT, [xmin, ymin, diameter, diameter]);
 
-subprob = imcrop(probIm, [row1, col1, up_radius, up_radius]) ;
+subprob = imcrop(probIm, [xmin, ymin, diameter, diameter]) ;
 CImage = GenCloudImage(subGT, double( [ceil(size(subprob, 2)/2), ceil(size(subprob, 1)/2), radius, density]), par);
 
-err = sum( (subprob(:) - CImage(:)).^2 ) ...
-    / (size(subprob, 1) * size(subprob, 2)) ;
+sqerr = sum( ((double(subprob(:)) / 255 - double(CImage(:)))/255).^2 ) / (size(subprob, 1) * size(subprob, 2)) ;
+maxerr  = max(abs(double(subprob(:))/255 - double(CImage(:))/255));
+err = 0.5 * sqrt(sqerr) + 0.5 * maxerr;
+%err = sqerr;
 end
 
