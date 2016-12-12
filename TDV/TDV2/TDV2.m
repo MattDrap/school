@@ -7,7 +7,7 @@ if( ~exist( 'wbs_default_cfg', 'file' ) )
   error( 'Cannot find WBS matcher. Probably PATH is not set.' );
 end
 
-list = dir('../DataUnDistorted');
+list = dir('../IMG_D');
 cfg  = wbs_default_cfg;
 list_dirs = {list.isdir};
 list_names = {list.name};
@@ -17,8 +17,7 @@ image_names = list_names(cellfun(@(p) p ~= true, list_dirs));
 for i = 1:length(image_names)
     if ~exist([image_names{i}(1:end - 3) 'mat'], 'file')
         fprintf('Reading %d-th image %n', i);
-        im2 = imread(['../DataUnDistorted/' image_names{i}]);
-        im = imresize(im2, 0.5);
+        im = imread(['../IMG_D/' image_names{i}]);
         fprintf('Computing descriptors for %d-th image%n', i);
         pts = wbs_describe_image(im, cfg);
         save([image_names{i}(1:end - 3) 'mat'], 'pts');
@@ -40,10 +39,8 @@ for i = 1:length(image_names)
     end
 end
 %%
-im1 = imread(['../DataUnDistorted/' image_names{2}]);
-im1 = imresize(im1, 0.5);
-im2 = imread(['../DataUnDistorted/' image_names{3}]);
-im2 = imresize(im2, 0.5);
+im1 = imread(['../IMG_D/' image_names{2}]);
+im2 = imread(['../IMG_D/' image_names{3}]);
 
 pc = matchmatrix{2, 3};
 pts1 = load([image_names{2}(1:end - 3) 'mat']);
@@ -55,12 +52,9 @@ plot_wbs(im1, im2, pc(1:2, :), pc(3:4, :));
 
 %%
 %consistent
-im1 = imread(['../DataUnDistorted/' image_names{2}]);
-im1 = imresize(im1, 0.5);
-im2 = imread(['../DataUnDistorted/' image_names{3}]);
-im2 = imresize(im2, 0.5);
-im3 = imread(['../DataUnDistorted/' image_names{4}]);
-im3 = imresize(im3, 0.5);
+im1 = imread(['../IMG_D/' image_names{2}]);
+im2 = imread(['../IMG_D/' image_names{3}]);
+im3 = imread(['../IMG_D/' image_names{4}]);
 
 pc23 = matchmatrix{2, 3};
 pc34 = matchmatrix{3, 4};

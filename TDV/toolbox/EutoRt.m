@@ -33,18 +33,13 @@ P1 = [eye(3,3), zeros(3, 1)];
 for j = 1:4
     P2 = [R_all{j} R_all{j}*t_all{j}];
     X = Pu2X(P1, P2, u1, u2);
-    %dd = P2{j}*X;
+    %dd = P2*X;
     %in_front = sum(dd(3, :) > 0);
-    Q = P2(:,1:3);
-    q = P2(3,:)*X;
-    detQ = det(Q);
-    z = sign(detQ).*q./X(4,:)/norm(Q(3,:));
+    z = getDepth(P1, X);
     in_front = sum(z > 0);
     
-    Q = P1(:,1:3);
-    q = P1(3,:)*X;
-    detQ = det(Q);
-    z = sign(detQ).*q./X(4,:)/norm(Q(3,:));
+    %dd1 = P1*X;
+    z = getDepth(P2, X);
     %in_front = in_front + sum(dd1(3, :) > 0);
     in_front = in_front + sum(z > 0);
     if in_front  == 10

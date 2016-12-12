@@ -1,10 +1,10 @@
-function [Rb, tb,inlb]=ransac_p3p(X, u, K, threshold,confidence)
+function [Rb, tb,inlb, miterator]=ransac_p3p(X, u, K, threshold,confidence)
 %UNTITLED10 Summary of this function goes here
 %  Detailed explanation goes here
   miterator = 1;
   num_of_miters = inf;
   number_of_inl = 0;
-  number_of_rob = 0;
+  %number_of_rob = 0;
   nthreshold = threshold*threshold;
   number_of_points = size(u , 2);
   
@@ -19,8 +19,8 @@ function [Rb, tb,inlb]=ransac_p3p(X, u, K, threshold,confidence)
         sampled = sample(3, number_of_points);
         res = p3p_grunert( Xp(:, sampled), upiK(:, sampled)); 
     
-        for i = 1:size(res,2)
-            Xc = res{1};
+        for r =res
+            Xc = r{1};
             [R, t] = XX2Rt_simple( Xp(:, sampled), Xc );
             
             P_full = K*[R t];
@@ -48,9 +48,10 @@ function [Rb, tb,inlb]=ransac_p3p(X, u, K, threshold,confidence)
                 %number_of_inl = sum(inlb);
 
 
-                num_of_miters = nsamples(floor(number_of_inl), number_of_points, 3, confidence);
+                num_of_miters = nsamples(number_of_inl, number_of_points, 3, confidence);
                 sprintf('Iteration %d / %d', miterator, num_of_miters)
             end
         end
         miterator = miterator+1;
     end
+    sprintf('Iteration %d / %d', miterator, num_of_miters)
