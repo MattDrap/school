@@ -8,3 +8,7 @@
 *.mat
 *.csv
 *.wrl
+*.fig
+*.asv
+*.ply
+*.npts

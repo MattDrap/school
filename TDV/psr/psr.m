@@ -25,7 +25,7 @@ function psr(X)
 %% parameters
 big_tri = 5; % max factor threshold of max to min triangle side length
 show = 0;  % plot figures
-psr_path = 'PoissonRecon32'; % psr executable, use *64 on 64bit systems
+psr_path = 'PoissonRecon64.exe'; % psr executable, use *64 on 64bit systems
 psr_output = 'psr.ply';      % output filename
 psr_dep = 10;                % psr detail level (max 12)
 

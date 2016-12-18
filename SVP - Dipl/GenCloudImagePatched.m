@@ -12,8 +12,7 @@ for i = 1:size(metaballs, 1)
 
     ymin = floor(metaballs(i, 2) - radius);
     xmin = floor(metaballs(i, 1) - radius);
-    
-    subimg = imcrop(img, [xmin, ymin, diameter, diameter]);
+    subimg = CropSat(img, metaballs(i, 1:2), radius);
     
     tempmetaballs = metaballs;
     tempmetaballs(:, 1) = tempmetaballs(:, 1) - metaballs(i, 1) + radius;

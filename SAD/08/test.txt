@@ -1,0 +1,21 @@
+(Hot Dog Buns and Sweet Relish)--->  (Hot Dogs),  Support = 0.04, Confidence = 0.84 
+(Potato Chips and Toothpaste)--->  (White Bread),  Support = 0.04, Confidence = 0.80 
+(Eggs and Wheat Bread)--->  (2pct. Milk),  Support = 0.04, Confidence = 0.76 
+(2pct. Milk and Toothpaste)--->  (White Bread),  Support = 0.04, Confidence = 0.76 
+(Potato Chips and 2pct. Milk)--->  (Eggs),  Support = 0.04, Confidence = 0.75 
+(White Bread and Cola)--->  (2pct. Milk),  Support = 0.04, Confidence = 0.75 
+(2pct. Milk and Cola)--->  (White Bread),  Support = 0.04, Confidence = 0.75 
+(White Bread and Cola)--->  (Eggs),  Support = 0.04, Confidence = 0.75 
+(Eggs and Cola)--->  (White Bread),  Support = 0.04, Confidence = 0.75 
+(Eggs and Wheat Bread)--->  (White Bread),  Support = 0.04, Confidence = 0.75 
+(2pct. Milk and Wheat Bread)--->  (White Bread),  Support = 0.04, Confidence = 0.74 
+(Potato Chips and 2pct. Milk)--->  (White Bread),  Support = 0.04, Confidence = 0.74 
+(White Bread and Wheat Bread)--->  (2pct. Milk),  Support = 0.04, Confidence = 0.73 
+(2pct. Milk and Wheat Bread)--->  (Eggs),  Support = 0.04, Confidence = 0.72 
+(White Bread and Potatoes)--->  (Eggs),  Support = 0.04, Confidence = 0.72 
+(Eggs and Toothpaste)--->  (White Bread),  Support = 0.04, Confidence = 0.72 
+(Hot Dogs and Hot Dog Buns)--->  (Sweet Relish),  Support = 0.04, Confidence = 0.72 
+(Hot Dog Buns)--->  (Hot Dogs),  Support = 0.06, Confidence = 0.71 
+(98pct. Fat Free Hamburger and Potato Chips)--->  (White Bread),  Support = 0.04, Confidence = 0.71 
+(2pct. Milk and Toothpaste)--->  (Eggs),  Support = 0.04, Confidence = 0.71 
+(2pct. Milk and White Bread)--->  (Eggs),  Support = 0.05, Confidence = 0.70 

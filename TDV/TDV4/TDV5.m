@@ -35,6 +35,7 @@ image_names = list_names(cellfun(@(p) p ~= true, list_dirs));
 %%
 pairs = [1 1 4 4 7 7 10 10,  1 2 3 4 5 6  7  8  9;
          2 3 5 6 8 9 11 12,  4 5 6 7 8 9 10 11 12];
+pairs = [4; 5];
 Xclouds = cell(size(pairs, 2), 1);
 poisson = cell(size(pairs, 2), 1);
 for i = 1:size(pairs, 2)
@@ -46,21 +47,19 @@ for i = 1:size(pairs, 2)
     F = vgg_F_from_P(P1, P2);
 
     img2 = imread(['../IMG_D/' image_names{pairs(2, i)}]);
-
-    [Ha, Hb, img1_r, img2_r] = rectify( F, img1, img2 );
-    D = gcs( img1_r, img2_r, [] );
     
-    %Edge Threshold Fix
-    Dh = min(size(img1_r, 1), size(img2_r, 1));
-    Dw = min(size(img1_r, 2), size(img2_r, 2));
-    logedge1 = img1_r == 0;
-    logedge2 = img2_r == 0;
-    logedge1 = logedge1(1:Dh, 1:Dw);
-    logedge2 = logedge2(1:Dh, 1:Dw);
-    logedge = logedge1 & logedge2;
-    se = strel('square',15);
-    dilated = imdilate(logedge, se);
-    D(dilated) = NaN;
+    D_name = sprintf('D%d%d.mat', pairs(1, i), pairs(2, i));
+    if(exist(D_name, 'file'))
+        load(D_name);
+    else
+        [Ha, Hb, img1_r, img2_r] = rectify( F, img1, img2 );
+        D = gcs( img1_r, img2_r, [] );
+        
+        not_nan = isnan(D);
+        se = strel('rectangle', [4, 3]);
+        dilated = imdilate(not_nan, se);
+        D(dilated) = NaN;
+    end
     %
     Par = Ha * P1;
     Pbr = Hb * P2;

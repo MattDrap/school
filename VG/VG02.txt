@@ -1,0 +1,117 @@
+Datasets representations (Answers follow after datasets)
+-------------------
+Dataset 4 - Float
+24	24
+7.30000019 7.30000019
+0.5	0.5
+24	24
+4	9
+15	27
+
+Dataset 4 - Double
+24.000000000000050	24.000000000000053
+7.3000000000000194	7.3000000000000167
+0.50000000000001621	0.50000000000001243
+24.000000000000068	24.000000000000071
+4	9
+15	27
+
+Dobìhne s chybou
+------------------
+Dataset 5 - Float
+200	49.2000008
+100	49.5999985
+-233.333328 50.9333344
+166.666672 49.3333321
+
+Dobìhne s chybou
+
+Dataset 5 - Double
+200	49.200000000000003
+100	49.600000000000001
+-233.33333333333334	50.933333333333330
+166.66666666666669	49.333333333333336
+
+Nedobìhne - zacyklí se.
+------------------
+Dataset 6 - Float
+0.5	0.5
+17.2999992	17.2999992
+24	24
+
+Dobìhne s chybou - jedna pøímka
+
+Dataset 6 - Double
+0.50000000000002531	0.50000000000001710
+17.300000000000001	17.300000000000001
+24.000000000000050	24.000000000000053
+
+Dobìhne s chybou výsledek správný.
+------------------
+Dataset 7 - Float
+0.5	0.5
+12	12
+24	24
+0	24
+Dobìhne s chybou - opìt oøíznutí na pøímku
+
+Dataset 7 - Double
+0.50000000000000455	0.50000000000000533
+12			12
+24			24
+0			24
+
+Dobìhne s chybou - výsledek správný.
+
+3)
+	U 4. (Float i Double) Datasetu dojde u bodu 2. bodu (~7.3000019) u orientaèního predikátu
+k vyhodnocení jako rovno, i pøestože by mìl být vlevo. 3. 2. 4. bod se poté vyhodnotí jako STRAIGHT,
+kde 4. bod je dále a výsledek je špatná konvexní obálka.
+Tedy souèástí konvexní obálky, takto je vyèlenìn.
+	U 5. (Float) Dataset dojde nìkolikrát ke špatnému výsledku kvùli reprezentaci èísel,
+kde namísto rovnì je výsledkem predikát vpravo. Díky tomuto algoritmus skonèí i pøestože,
+je výsledek chybný. Vytvoøí se takový polygon namísto skoro jedné pøímky.
+	U 5. (Double) dojde k zacyklení, kvùli nesprávnému výsledku orientaèního predikátu
+ - mezi body 1. (x = 200) a 3. (x ~= -233) vyhodnotí 4. bod (x ~= 166) jako RIGHT_TURN
+4. bod se stane souèástí CHull, poté se vytvoøí pøímka z 4. a 1. bodu, kde kvùli RIGHT TURN u bodu 2,
+se za následující bod dosadí bod 2, který se stane souèástí CHullu a poté se pokraèuje od tohoto bodu
+a dojde k orient (4., 2., 3.), který dopadne LEFT_TURN. Tím se dostaneme opìt 2. bod do CHull a tím se zacyklí.
+	U 6. datasetu se float oøízne tak, že výsledek jsou body na pøímce a ty projdeme
+a získáme vlastnì jen první a poslední bod. viz obrázek a pøiložná data. Double má dostateènou
+datovou reprezentaci a predikát funguje správnì.
+	u 7. Obdobnì jako u 6. float se oøízne a body leží na pøímce
+a tedy chybí jeden bod v CHullu.
+
+4)	Failure E1a - "Predikát nedokáže správnì detekovat otoèení vùèi pøímce (otoèení o skoro 180°)"
+	Chyba, kde orientaèní predikát by mìl dát odpovìï LEFT_TURN, ale dá odpovìï RIGHT_TURN.
+	Napø. Dataset 7 - kde, ale nedojde k chybì, jelikož je zde dost bodù, které poté chybu inkrementálnì "opraví".
+	Failure E1b - Chyba, kde orientaèní predikát by mìl dát odpovìï RIGHT, ale dá odpovìï LEFT.
+	Napø. - Dataset 5 Double - body 4,2,3 jedna z chyb, které vedou k zacyklení pro tento dataset.	
+	E1a, E1b - Mùže vést k zapoètení ,nebo naopak nezapoètení k bodu,
+ 	který respektive by nemìl ,èi mìl být souèástí konvexní obálky.
+
+	Failure E2 -- "Predikát nevidí hranu konvexní obálky"
+	Chyba, kde orientaèní predikát by mìl dát odpovìï LEFT_TURN, ale dá odpovìï STRAIGHT.
+	Napø. Dataset 4 Double - body 3,2,4 - bod 2, který má být souèástí CHullu, ale není, protože
+	si myslí, že je již bod souèástí vnitøní konvexní množiny - leží na pøímce konvexního obalu.
+	Dataset 5 Double - body 1,2,3 jedna z chyb, které vedou k zacyklení pro tento dataset.
+	Také v Dataset 6 Double.
+	
+	(Failure E3 - Chyba špatné reprezentace dat
+	napø. Dataset 6 Float)
+
+5)
+Dva jsou poskytnuty, protože pøi použití naivního orientaèního predikátu
+si nemùžeme být jisti, že body leží na jedné pøímce.
+
+Pøi použití Extended2DExact predikátu s naivním orientaèním predikátem:
+Mùže nastat situace, že bychom vyšetøovali body p,q,r.
+Jestli se nachází bod r na pøímce procházející body p,q,
+ale body p,q,r by pøitom neležely na stejné pøímce 
+( Chyba, která vznikla použitím naivního orientaèního predikátu) - Úkol 1 - velké žluté ètverce. 
+
+Pøi použití Extended2DNaive predikátu s exaktním orientaèním predikátem:
+Mùže nastat situace, že body p,q,r, které 100% leží na pøímce díky exaktnímu orientaènímu predikátu,
+mùže být r posunuté o velmi malé delta (kvùli reprezentaci èísel mùže být stejný)
+od q a mohl by být vyhodnocen, že je totožný s q, nebo je pøed q na pøímce p, tedy
+(r-q) se vyhodnotí jako nula, i pøestože by nemìlo.
