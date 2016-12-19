@@ -15,7 +15,7 @@ white = 255;
 angle0 = 90 - par.sun_elevation;
 angle0 = angle0 * pi / 180;
 
-angle1 = 0; 
+angle1 = par.sun_azimuth; 
 angle1 = angle1 * pi / 180;
 
 for i = 1:size(metaballs, 1)
@@ -39,7 +39,7 @@ for i = 1:size(metaballs, 1)
     output_cloud_mask(yvec, xvec, :) = output_cloud_mask(yvec, xvec, :) + cloud_bitmap(~clipY, ~clipX, :);
     
     %SHADOW
-    cloud_height = randi([15, 25], 1);
+    cloud_height = randi([par.cloud_height_min, par.cloud_height_max], 1);
     x = tan(angle0)* cloud_height;
     dir = [cos(angle1); sin(angle1)];
     

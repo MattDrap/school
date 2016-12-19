@@ -10,7 +10,15 @@ function [frequent_itemsets] = my_apriori(database, min_frequency)
     % (see slides of the lecture: "APRIORI algorithm")
     L = frequent_itemsets;
     while(~isempty(L))
-        Cn = apriori_gen(L', 1:size(database, 2));
+        %alphabet = 1:size(database, 2);
+         alphabet = [];
+         for smallL = L
+             for character = smallL
+                 alphabet = [alphabet, character{:}];
+             end
+         end
+         alphabet = sort(unique(alphabet));
+        Cn = apriori_gen(L', alphabet);
         Ln = prune_itemsets(Cn, database, min_frequency);
         frequent_itemsets = [frequent_itemsets, Ln'];
         L = Ln';

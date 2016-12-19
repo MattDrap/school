@@ -22,8 +22,8 @@ files = par.file_list{1};
 GT = GT ./ 1e+4;
 GT = uint8(GT .* 255);
 
-files = par.file_list{4};
-name = files{30};
+files = par.file_list{1};
+name = files{25};
 %[IM, IMmask] = Sat2Im(name, par); %25, 26, 27 .. [2, 30], i[3, 5],i[3,6], i[4, 20], i[4, 22], vi[4, 24], b[4, 25, 26, 36, 37], i[4, 29,30, 35], lb[4, 32], cb[4, 33]
 [IM, IMmask] = ReadSat(name, par);
 IM = IM./1e+4;

@@ -3,7 +3,6 @@ close all;
 load('marketBasket.mat');
 min_freq = 0.03;
 [frequent_itemsets] = my_apriori(tranDb, min_freq);
-
 %%
 min_conf = 0.7;
 rules = associationRules(frequent_itemsets, min_conf, tranDb);

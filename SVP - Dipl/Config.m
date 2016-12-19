@@ -20,3 +20,8 @@ par.metadata_path = 'C:\Users\Matt\Downloads\CVUT\SVP - Dipl\iti_urban_dynamic_l
 par.parallel = false;
 par.subb = 5;
 par.threshold = 10;
+
+par.sun_elevation = 30;
+par.sun_azimuth = 160;
+par.cloud_height_min = 20;
+par.cloud_height_max = 30;

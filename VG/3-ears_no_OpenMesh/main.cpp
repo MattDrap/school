@@ -445,6 +445,212 @@ bool TriangulateFaceByEarCutting(
 	std::vector<int> &faces)
 	// ======== BEGIN OF SOLUTION - TASK 2-1 ======== //
 {
+	std::vector<typename KERNEL::PointType> my_points = points;
+	std::vector<int> point_ind;
+	for (int i = 0; i < my_points.size(); i++) {
+		point_ind.push_back(i);
+	}
+	TriangulateRecurssion<KERNEL>(my_points, faces, point_ind, 0);
+	
+	// Implement the ear cutting procedure
+	return false;
+};
+template<typename KERNEL>
+void TriangulateRecurssion(std::vector<typename KERNEL::PointType> points,
+	std::vector<int> &faces, std::vector<int> indices, int index) {
+	typedef KERNEL::PointType point;
+	typename KERNEL::Orient orient;
+	if (points.size() == 3) {
+		faces.push_back(indices[0]);
+		faces.push_back(indices[1]);
+		faces.push_back(indices[2]);
+		return;
+	}
+	int ind1 = (index - 1 + points.size()) % points.size();
+	int ind2 = (index + 1 + points.size()) % points.size();
+
+	if (isEar<KERNEL>(points, index)) {
+		points.erase(points.begin() + index);
+		faces.push_back(indices[ind1]);
+		faces.push_back(indices[index]);
+		faces.push_back(indices[ind2]);
+		indices.erase(indices.begin() + index);
+
+		TriangulateRecurssion<KERNEL>(points, faces, indices, 0);
+		return;
+	}
+	//Create Bisector and find first intersection
+	point predir(0.5 * (points[ind1].x + points[ind2].x), 0.5 * (points[ind1].y + points[ind2].y));
+	point origin = points[index];
+	point dir((predir.x - origin.x), (predir.y - origin.y));
+	KERNEL::FloatType norm = sqrt(dir.x * dir.x + dir.y * dir.y);
+	dir.x = (dir.x / norm);
+	dir.y = (dir.y / norm);
+	int k1 = -1, k2 = -1;
+	KERNEL::FloatType mint2;
+	point v3(-dir.y, dir.x);
+	KERNEL::FloatType mint = 100000;
+	KERNEL::FloatType maxt = -100000;
+	bool convex = orient(points[ind1], points[index], points[ind2]) == OrientationType::LEFT_TURN;
+	for (int e1 = 0; e1 < points.size(); e1++) {
+		int e2 = (e1 + 1 + points.size()) % points.size();
+		if (e1 != index && e2 != index) {
+			point v1(origin.x - points[e1].x, origin.y - points[e1].y);
+			point v2(points[e2].x - points[e1].x, points[e2].y - points[e1].y);
+
+			KERNEL::FloatType pret = v2.x*v1.y - v2.y*v1.x;
+			KERNEL::FloatType pret2 = v1.x * v3.x + v1.y * v3.y;
+			KERNEL::FloatType pret1 = v2.x * v3.x + v2.y * v3.y;
+			KERNEL::FloatType t1 = pret / pret1;
+
+			KERNEL::FloatType t2 = pret2 / pret1;
+
+			if (convex) {
+				if (t1 < mint && t1 > 0 && t2 >= 0 && t2 <= 1) {
+					mint = t1;
+					k1 = e1;
+					k2 = e2;
+					mint2 = t2;
+				}
+			}
+			else {
+				if (t1 > maxt && t1 < 0 && t2 >= 0 && t2 <= 1) {
+					maxt = t1;
+					k1 = e1;
+					k2 = e2;
+					mint2 = t2;
+				}
+			}
+		}
+	}
+	//Failure test
+	if (k1 == -1) {
+		return;
+	}
+	//Add possible cuts
+	std::vector<int> possibles;
+	point y(points[k1].x + mint2 * (points[k2].x - points[k1].x), points[k1].y + mint2 * (points[k2].y - points[k1].y));
+	for (int j = 0; j < points.size(); j++) {
+		if (j != k1 && j != index) {
+			OrientationType test1 = orient(y, points[index], points[j]);
+			OrientationType test2 = orient(points[index], points[k1], points[j]);
+			OrientationType test3 = orient(points[k1], y, points[j]);
+			if (test1 == OrientationType::LEFT_TURN &&
+				test2 == OrientationType::LEFT_TURN &&
+				test3 == OrientationType::LEFT_TURN) {
+				if(j != ind1 && j != ind2) {
+					possibles.push_back(j);
+				}
+			}
+		}
+		if (j != k2 && j != index) {
+			OrientationType test1 = orient(points[index], y, points[j]);
+			OrientationType test2 = orient(y, points[k2], points[j]);
+			OrientationType test3 = orient(points[k2], points[index], points[j]);
+			if (test1 == OrientationType::LEFT_TURN &&
+				test2 == OrientationType::LEFT_TURN &&
+				test3 == OrientationType::LEFT_TURN) {
+				if (j != ind1 && j != ind2) {
+					possibles.push_back(j);
+				}
+			}
+		}
+	}
+	if (k1 != ind1 && k1 != ind2) {
+		possibles.push_back(k1);
+	}
+	if (k2 != ind1 && k2 != ind2) {
+		possibles.push_back(k2);
+	}
+	//Find polygon diagonal cut
+	int best = 0;
+	for (int j = 0; j < possibles.size(); j++) {
+		point origin = points[index];
+		point dir( (points[possibles[j]].x - origin.x), ( points[possibles[j]].y - origin.y ) );
+		point v3(-dir.y, dir.x);
+		bool is_in = true;
+		for (int e1 = 0; e1 < points.size(); e1++) {
+			int e2 = (e1 + 1) % points.size();
+			if (e1 != index && e2 != index) {
+				point v1(origin.x - points[e1].x, origin.y - points[e1].y);
+				point v2(points[e2].x - points[e1].x, points[e2].y - points[e1].y);
+
+				KERNEL::FloatType pret = v2.x*v1.y - v2.y*v1.x;
+				KERNEL::FloatType pret2 = v1.x * v3.x + v1.y * v3.y;
+				KERNEL::FloatType pret1 = v2.x * v3.x + v2.y * v3.y;
+				KERNEL::FloatType t1 = pret / pret1;
+				KERNEL::FloatType t2 = pret2 / pret1;
+				if (t1 < 1 && t1 > 0 && t2 >= 0 && t2 <= 1) {
+					is_in = false;
+					break;
+				}
+			}
+		}
+		if (is_in) {
+			best = possibles[j];
+		}
+	}
+	//Take points, split them and recursion
+	int start = best < index ? best : index;
+	int end = best < index ? index : best;
+	int var = start;
+	std::vector<typename KERNEL::PointType> inner_points1;
+	std::vector<int> inner_indices1;
+	while (var != end) {
+		inner_points1.push_back(points[var]);
+		inner_indices1.push_back(indices[var]);
+		var = (var + 1) % points.size();
+	}
+	inner_indices1.push_back(indices[var]);
+	inner_points1.push_back(points[var]);
+
+	var = end;
+	std::vector<typename KERNEL::PointType> inner_points2;
+	std::vector<int> inner_indices2;
+	while (var != start) {
+		inner_points2.push_back(points[var]);
+		inner_indices2.push_back(indices[var]);
+		var = (var + 1) % points.size();
+	}
+	inner_indices2.push_back(indices[var]);
+	inner_points2.push_back(points[var]);
+
+	TriangulateRecurssion<KERNEL>(inner_points1, faces, inner_indices1, rand() % (inner_points1.size() - 1));
+	TriangulateRecurssion<KERNEL>(inner_points2, faces, inner_indices2, rand() % (inner_points2.size() - 1));
+};
+template<typename KERNEL>
+bool isEar(std::vector<typename KERNEL::PointType> &points, int ind) {
+	typename KERNEL::Orient orient;
+	int ind1 = (ind - 1 + points.size()) % points.size();
+	int ind2 = (ind + 1 + points.size()) % points.size();
+
+	OrientationType d = orient(points[ind1], points[ind], points[ind2]);
+
+	if (d == LEFT_TURN) {
+		bool not_in = true;
+		for (int j = 0; j < points.size(); j++) {
+			if (j != ind1 && j != ind2 && j != ind) {
+				OrientationType test1 = orient(points[ind1], points[ind], points[j]);
+				OrientationType test2 = orient(points[ind], points[ind2], points[j]);
+				OrientationType test3 = orient(points[ind2], points[ind1], points[j]);
+				if (test1 == OrientationType::LEFT_TURN &&
+					test2 == OrientationType::LEFT_TURN &&
+					test3 == OrientationType::LEFT_TURN) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	return false;
+};
+
+template<typename KERNEL>
+bool TriangulateFaceByEarCutting2(
+	const std::vector<typename KERNEL::PointType> &points,
+	std::vector<int> &faces)
+	// ======== BEGIN OF SOLUTION - TASK 2-1 ======== //
+{
 	typename KERNEL::Orient orient;
 	std::vector<typename KERNEL::PointType> my_points = points;
 	std::vector<int> point_ind;
@@ -452,60 +658,42 @@ bool TriangulateFaceByEarCutting(
 		point_ind.push_back(i);
 	}
 	while (my_points.size() > 3) {
-		std::vector<bool> convex;
-		for (int i = 0; i < my_points.size() - 1; i++) {
-			OrientationType d;
-			if (i == 0) {
-				d = orient(my_points[my_points.size() - 1], my_points[0], my_points[1]);
-			}
-			else {
-				d = orient(my_points[i - 1], my_points[i], my_points[i + 1]);
-			}
-			if (d == LEFT_TURN) {
-				convex.push_back(true);
-			}
-			else {
-				convex.push_back(false);
-			}
-		}
-		OrientationType d = orient(my_points[my_points.size() - 2], my_points[my_points.size() - 1], my_points[0]);
-		if (d == LEFT_TURN) {
-			convex.push_back(true);
-		}
-		else {
-			convex.push_back(false);
-		}
-		bool found_ear = false;
 		for (int i = 0; i < my_points.size(); i++) {
-			if (convex[i]) {
-				int ind1 = (i - 1 + my_points.size()) % my_points.size();
-				int ind2 = (i + 1 + my_points.size()) % my_points.size();
-				if (!convex[ind1] || !convex[ind2]) {
-					
-					convex.erase(convex.begin() + i);
-					my_points.erase(my_points.begin() + i);
+			int ind = i;
+			int ind1 = (ind - 1 + my_points.size()) % my_points.size();
+			int ind2 = (ind + 1 + my_points.size()) % my_points.size();
+			
+			OrientationType d = orient(my_points[ind1], my_points[ind], my_points[ind2]);
+
+			if (d == LEFT_TURN) {
+				bool is_in = false;
+				for (int j = 0; j < my_points.size(); j++) {
+					if (j != ind1 && j != ind2 && j != ind) {
+						OrientationType test1 = orient(my_points[ind1], my_points[ind], my_points[j]);
+						OrientationType test2 = orient(my_points[ind], my_points[ind2], my_points[j]);
+						OrientationType test3 = orient(my_points[ind2], my_points[ind1], my_points[j]);
+						if (test1 == OrientationType::LEFT_TURN &&
+							test2 == OrientationType::LEFT_TURN &&
+							test3 == OrientationType::LEFT_TURN) {
+							is_in = true;
+							break;
+						}
+					}
+				}
+				if(is_in == false){
+					my_points.erase(my_points.begin() + ind);
 					faces.push_back(point_ind[ind1]);
-					faces.push_back(point_ind[i]);
+					faces.push_back(point_ind[ind]);
 					faces.push_back(point_ind[ind2]);
-					point_ind.erase(point_ind.begin() + i);
-					found_ear = true;
+					point_ind.erase(point_ind.begin() + ind);
 					break;
 				}
 			}
 		}
-		if (!found_ear) {
-			int ind = my_points.size() - 1;
-			int ind1 = (ind - 1 + my_points.size()) % my_points.size();
-			int ind2 = (ind + 1 + my_points.size()) % my_points.size();
-			convex.erase(convex.begin() + ind);
-			my_points.erase(my_points.begin() + ind);
-			faces.push_back(point_ind[ind1]);
-			faces.push_back(point_ind[ind]);
-			faces.push_back(point_ind[ind2]);
-			point_ind.erase(point_ind.begin() + ind);
-			found_ear = true;
-		}
 	}
+	faces.push_back(point_ind[0]);
+	faces.push_back(point_ind[1]);
+	faces.push_back(point_ind[2]);
 	// Implement the ear cutting procedure
 	return false;
 };
