@@ -3,7 +3,7 @@ par.data_dir = 'C:\Users\Matt\Desktop\Gisat\urban_dynamic_v3.0\data';   %path to
 %'/Users/zimmerk/projects/GISAT_ESA_ITI/data/iti_urban_dynamic_landsat_praha/' 
 
 % Ground truth
-par.gt = {fullfile(par.data_dir,'/changes/PRG_2006_2009/PRG_ref_stable_change_default.tif')};
+par.gt = './GT/PRG_ref_stable_change_default.tif';
 par.global_normalization = false;
 par.global_normalization_trim = 0.01;
 par.allow_incomplete_feature_vectors = false;
@@ -22,6 +22,6 @@ par.subb = 5;
 par.threshold = 10;
 
 par.sun_elevation = 30;
-par.sun_azimuth = 160;
+par.sun_azimuth = 150;
 par.cloud_height_min = 20;
 par.cloud_height_max = 30;

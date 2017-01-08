@@ -14,7 +14,9 @@ list_names = {list.name};
 image_names = list_names(cellfun(@(p) p ~= true, list_dirs));
 
 pts = pts';
-for i=1:12
+imst = 1:12;
+imst = 7;
+for i=imst
     img = imread(['../IMG_D/' image_names{i}]);
     [H,W,C] = size(img);
     P = K*cameraSet{i};
@@ -29,7 +31,7 @@ for i=1:12
         col(inds(k), :) = col(inds(k), :) + squeeze(double(img(proj(2, k), proj(1, k), :)))';
     end
 end
-col = col./12;
+col = col./size(imst, 2);
 col = round(col);
 % save the result with color
 plywritetricol(tri,pts',col,'psr_col.ply');

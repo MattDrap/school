@@ -13,12 +13,12 @@ pcb = mypca(X, 2);
 plotpoints(pcb, labels, colors);
 
 %% ISO-MAP
-%figure(2);
-%iso = isomap(X, 2, 8);
-%plotpoints(iso, labels, colors);
+figure(3);
+iso = isomap(X, 2, 5);
+plotpoints(iso, labels, colors);
 
 %% t-SNE 
-figure(3);
+figure(4);
 sne = tsne(X, [], 2, 30, 30);
 plotpoints(sne, labels, colors);
 
@@ -30,5 +30,5 @@ perm = randperm(size(X,1));
 disp('Accuracy of regression trees on...');
 disp(['  original data:            ' num2str(100 * classify(X(perm,:), colors(perm,:)))   '%']);
 disp(['  plain PCA processed data: ' num2str(100 * classify(pcb(perm,:), colors(perm,:))) '%']);
-%disp(['  ISO-MAP processed data:   ' num2str(100 * classify(iso(perm,:), colors(perm,:))) '%']);
+disp(['  ISO-MAP processed data:   ' num2str(100 * classify(iso(perm,:), colors(perm,:))) '%']);
 disp(['  t-SNE processed data:     ' num2str(100 * classify(sne(perm,:), colors(perm,:))) '%']);

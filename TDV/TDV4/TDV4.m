@@ -36,7 +36,7 @@ proj_th = 6;
 load('Corr.mat');
 u = matchmatrix{pick1, pick2};
 num_cameras = 12;
-[R, t,F,inl] = ransac_e(matchmatrix{pick1, pick2}, K, ransac_e_th, 0.99);
+[R, t,F,inl, b_err] = ransac_e(matchmatrix{pick1, pick2}, K, ransac_e_th, 0.99);
 P1 = [eye(3,3), zeros(3,1)];
 P2 = R*[eye(3,3), t];
 %%

@@ -1,0 +1,2 @@
+2) Almost any two datasets from previous assignment taken as polygons will give different results in predicates.
+If we took them then explanation will be same as in previous assignment.

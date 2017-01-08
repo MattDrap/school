@@ -1,4 +1,4 @@
-function [Rb, tb,Fb,inlb]=ransac_e(u,K, threshold,confidence)
+function [Rb, tb,Fb,inlb, best_err]=ransac_e(u,K, threshold,confidence)
 %UNTITLED10 Summary of this function goes here
 %  Detailed explanation goes here
   miterator = 1;
@@ -47,6 +47,7 @@ function [Rb, tb,Fb,inlb]=ransac_e(u,K, threshold,confidence)
                 inlb = inl;
                 %
                 number_of_inl = sum(rob_e);
+                best_err = rob_e;
                 %number_of_inl = sum(inlb);
 
 

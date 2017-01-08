@@ -7,7 +7,7 @@ function [ output_img, output_cloud_mask, shadow_mask ] = GenCloudImagePatchedBi
 %par -- parametrization
 
 [H,W,C] = size(img);
-output_cloud_mask = zeros(H,W,C);
+cloud_mask = zeros(H,W,C);
 shadow_mask = zeros(H,W,C);
 
 white = 255;
@@ -15,7 +15,7 @@ white = 255;
 angle0 = 90 - par.sun_elevation;
 angle0 = angle0 * pi / 180;
 
-angle1 = par.sun_azimuth; 
+angle1 =  (90 - par.sun_azimuth);
 angle1 = angle1 * pi / 180;
 
 for i = 1:size(metaballs, 1)
@@ -36,7 +36,7 @@ for i = 1:size(metaballs, 1)
     xvec(clipX) = [];
     yvec(clipY) = [];
     %
-    output_cloud_mask(yvec, xvec, :) = output_cloud_mask(yvec, xvec, :) + cloud_bitmap(~clipY, ~clipX, :);
+    cloud_mask(yvec, xvec, :) = cloud_mask(yvec, xvec, :) + cloud_bitmap(~clipY, ~clipX, :);
     
     %SHADOW
     cloud_height = randi([par.cloud_height_min, par.cloud_height_max], 1);
@@ -65,11 +65,19 @@ for i = 1:size(metaballs, 1)
     shadow_yvec(shadow_clipY) = [];
     
     shadow_mask(shadow_yvec, shadow_xvec, :) = shadow_mask(shadow_yvec, shadow_xvec, :) ...
-        + cloud_bitmap(~shadow_clipY, ~shadow_clipX, :) / 2;
+        + cloud_bitmap(~shadow_clipY, ~shadow_clipX, :);
 end
     ww = white .* ones(H,W,C);
     shadow_mask = uint8(ww .* shadow_mask);
-    output_cloud_mask = uint8(ww .* output_cloud_mask);
-    output_img = output_cloud_mask + img - shadow_mask;
+    output_cloud_mask = uint8(ww .* cloud_mask);
+    alpha = 0.6;
+    beta = betasigm(cloud_mask);
+    betaimg = uint8( beta .* double(img) );
+    betashw = uint8( alpha * (1-beta).* double(shadow_mask) );
+    output_img = output_cloud_mask + betaimg - betashw;
+end
+
+function y = betasigm(x)
+    y = 1./ (1 + exp(1*(x - 1)));
 end
 

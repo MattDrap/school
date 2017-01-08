@@ -35,7 +35,7 @@ image_names = list_names(cellfun(@(p) p ~= true, list_dirs));
 %%
 pairs = [1 1 4 4 7 7 10 10,  1 2 3 4 5 6  7  8  9;
          2 3 5 6 8 9 11 12,  4 5 6 7 8 9 10 11 12];
-pairs = [4; 5];
+pairs = [1 ; 4];
 Xclouds = cell(size(pairs, 2), 1);
 poisson = cell(size(pairs, 2), 1);
 for i = 1:size(pairs, 2)
@@ -49,17 +49,17 @@ for i = 1:size(pairs, 2)
     img2 = imread(['../IMG_D/' image_names{pairs(2, i)}]);
     
     D_name = sprintf('D%d%d.mat', pairs(1, i), pairs(2, i));
-    if(exist(D_name, 'file'))
-        load(D_name);
-    else
+    %if(exist(D_name, 'file'))
+    %    load(D_name);
+    %else
         [Ha, Hb, img1_r, img2_r] = rectify( F, img1, img2 );
         D = gcs( img1_r, img2_r, [] );
         
         not_nan = isnan(D);
-        se = strel('rectangle', [4, 3]);
+        se = strel('rectangle', [5, 4]);
         dilated = imdilate(not_nan, se);
         D(dilated) = NaN;
-    end
+    %end
     %
     Par = Ha * P1;
     Pbr = Hb * P2;
@@ -74,6 +74,7 @@ for i = 1:size(pairs, 2)
     u2 = [mX-D(not_nan), mY]';
     
     save(sprintf('D%d%d', pairs(1, i), pairs(2, i)), 'D');
+    imwrite(D, sprintf('D%d%d.PNG', pairs(1, i), pairs(2, i)));
     %%
     fprintf('Triangulation of points - %d points\n', size(u, 2));
     X = Pu2X(Par, Pbr, e2p(u), e2p(u2));
