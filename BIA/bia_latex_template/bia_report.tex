@@ -1,0 +1,165 @@
+\documentclass[journal]{IEEEtran}
+% zvolte kodovani
+\usepackage[utf8]{inputenc} % linux/unix
+%\usepackage[latin2]{inputenc}
+%\usepackage[cp1250]{inputenc} % Windows
+\usepackage[english]{babel}
+\usepackage{graphicx}
+
+
+
+
+\begin{document}
+
+\title{Comparison of neural networks and feature based neural networks}
+\author{Matěj Bartoš}
+
+\maketitle
+
+\begin{abstract}
+In this paper we examine the influence of a feature extraction on the resulting accuracy of neural networks (NN).
+We consider edge detection (Sobel operator), morphological opening, PCA and their combinations.
+The conclusion of this paper is that there is a negligible improvement of accuracy on small NN with extracted features which leads to bigger time complexity. However, there is no improvement of accuracy with extracted features on bigger NN. Consequently when features are application-made, they can have a positive influence on accuracy improvement as it can be seen in this paper.
+\end{abstract}
+
+\IEEEpeerreviewmaketitle
+
+\section{Assignment}
+The assignment of this semestral work is to create and extract features from MNIST\cite{mnistlecun} Dataset. Its purpose is to compare accuracies of NN that have extracted features as an input and standard NN that have as input pixels. Comparison is based upon MNIST Dataset.
+
+\section{Introduction}
+In the last two decades NN have been a huge topic for current researches, due to many potential practical applications of NN e.g. in the field of Computer vision. Eventhough many novel NN have top-level accuracy, there is still room to improvements. 
+The main part of the problem is learning time of NN and their accuracies. In this paper the main focus will be on accuracy by preprocessing input data in such matter that we aim to reduce the number of input neurons and to increase the amount of information.
+
+\section{Goal of semestral work}
+The purpose of this semestral work is to find such features, that have better accuracy when they are fed into neural network than the standard pixel based approach. Features are extracted only from MNIST DataSet. We do not consider convolutional neural networks. We aim to find features that have less dimensionality and therefore compress the original pixels.
+Naučte se formulovat cíl práce, zde podrobně rozeberte zadání, v závěru pak zhodnotíte, zdali
+bylo cíle dosaženo.
+
+\section{Experiments}
+At first part we propose features that we are going to implement and test out. We have implemented 5 features:
+\begin{enumerate}
+\item{Edges:}
+	It is an approach where we approximate a derivation of pixels as differentiation, therefore we can apply a convolution of image with a convolutional kernel in this case Sobel operator. We convolve with such kernels out of which we get horizontal and verticals approximation of edges and estimate an angle out of edges. The resulting angle is the extracted feature and has dimension of 784 (28 x 28).
+\item{Morphological operator:}
+	Applies morphological opening on input images and retrieves thinned binary image as feature vector.
+\item{Principle Component Analysis:}
+	Reduce the input number of pixels from original dimension 784 (28x28) to estimated 50 components. The number 50 was estimated as a minimal loss of an information.
+\item{Structural\cite{features}:}
+	Image is rescaled into 32x32 pixels and then histograms of black pixels in rows and columns separately are computed that leads to 64 long feature vector.
+\item{Modified Edges\cite{features}:}
+	Image is rescaled into 25x25 pixels. As in the Edge detector horizontal and vertical approximations of edges are computed, furthermore both diagonal edge approximations are also computed. Resulting approximations and the original image are divided into a grid of 5x5 sub-images. In these 5x5 sub-images histograms are computed - the percentage of black pixels to all pixels. Altogether the length of a feature vector will be 125 long.
+\end{enumerate}
+
+Experiments have been tested on 100 epochs with a Moment optimizer. The validation accuracy was computed after every 5 epochs. The learning was stopped when a validation accuracy dropped in three consecutive validation epochs (15 epochs).
+
+In the first part of following experiments we measure the performance of mentioned features on MNIST DataSet where neural network has not a hidden layer. Measured accuracies can be found in Table \ref{tab:extab1} on page \pageref{tab:extab1}. In Table \ref{tab:extab1} the results of each individual experiments with given feature are displayed in proper columns. The last column consists of an average which is computed from previous results. "Pixels" represent original NN with standard approach which will be compared with extracted features. Features which are described in following tables refer to those above mentioned approches. All numbers in following tables are expressed in percents of accuracies, which is computed as a number of correctly classified images divided by the number of all test images. "Pixels and edges" can be understand as a special case of feature extraction, because it merges pixel information with edges of the original image.
+\begin{table}
+  \centering
+  \caption{Percentage of accuracies of different features on NN without a hidden layer}
+  \begin{tabular}{|l||c|c|c|c|}
+  \hline
+    Features & 1. Exp. & 2. Exp. & 3. Exp. & Avg. \\
+  \hline
+  \hline
+  Pixels & 92.54 & 92.65 & 92.59 & 92.59 \\
+  \hline
+  Edges & 86.22 & 86.4 &  86.19 & 86.27\\ 
+  \hline
+ Morph. op. & 87.38 & 87.6 & 87.64 & 87.54\\
+ \hline
+ PCA & 91.18 & 91.18 & 91.18 & 91.18\\
+ \hline
+ PCA with edges & 9.8 &   9.8 &  9.8 & 9.8 \\
+ \hline
+ PCA with M. op. &  87.31 & 87.45 & 87.04 & 87.27\\
+ \hline
+ Structural &  80.18 &  80.88 & 80.77 & 80.61\\
+ \hline
+ Mod. edges & 92.34 &  91.5 &  92.19 & 92.01\\
+ \hline
+ Struct. and M. edges & 92.63 & 92.58 &  93.14 &  92.78\\
+ \hline
+ Pixels and edges & 9.8 & 9.8 &  9.8 & 9.8\\
+ \hline
+  \end{tabular}
+  \label{tab:extab1}
+\end{table}
+
+In the second case NN consist of one hidden layer with a half of nodes of an input layer. Though accuracies of tested NN are better, extra hidden layer requires more learning time. The configuration of testing scenario was not changed from previous experiments, however in some features that have not converged in given epochs the change of configuration could help to improve accuracy even more.
+\begin{table}
+  \centering
+  \caption{Percentage of accuracies of different features on NN with one hidden layer}
+  \begin{tabular}{|l||c|c|c|c|}
+  \hline
+    Features & 1. Exp. & 2. Exp. & 3. Exp. & Avg. \\
+  \hline
+  \hline
+  Pixels & 98.08 & 98.02 & 98.02 & 98.04 \\
+  \hline
+  Edges & 96.26 & 96.37 &  96.29 &  94.31 \\ 
+  \hline
+ Morph. op. & 94.27 & 94.71 & 94.6 & 94.53\\
+ \hline
+ PCA & 95.52 & 95.74 & 95.85 & 95.70\\
+ \hline
+ PCA with edges & 96.28 &   96.24 &  96.35 & 96.29 \\
+ \hline
+ PCA with M. op. &  94.9 & 94.93 & 94.98 & 94.94\\
+ \hline
+ Structural &  86.44 &  87.48 & 87.13 &  87.02\\
+ \hline
+ Mod. edges & 95 &  95.82 &  95.74 &  95.52\\
+ \hline
+ Struct. and M. edges & 96.18 & 96.21 &  95.74 &  96.04\\
+ \hline
+ Pixels and edges & 95.95 & 96.09 &  96.13 & 96.06\\
+ \hline
+  \end{tabular}
+  \label{tab:extab2}
+\end{table}
+
+In the last part of experiments, NN is extended by one more hidden layer with quarter of nodes of input layer that is connected to the previous hidden layer.
+\begin{table}
+  \centering
+  \caption{Percentage of accuracies of different features on NN with two hidden layers}
+  \begin{tabular}{|l||c|c|c|c|}
+  \hline
+    Features & 1. Exp. & 2. Exp. & 3. Exp. & Avg. \\
+  \hline
+  \hline
+  Pixels & 97.96 & 97.93 & 98.03 & 97.97 \\
+  \hline
+  Edges & 96.46 & 96.37 &  96.28 &  96.37 \\ 
+  \hline
+ Morph. op. & 94.12 & 94.44 & 94.53 & 94.36\\
+ \hline
+ PCA & 95.79 & 95.84 & 96.26 & 95.96\\
+ \hline
+ PCA with edges & 96.48 &   96.28 &  96.43 & 96.40 \\
+ \hline
+ PCA with M. op. &  94.81 & 94.57 & 94.75 & 94.71\\
+ \hline
+ Structural &  86.52 &  86.52 & 87.09 &  86.71\\
+ \hline
+ Mod. edges & 94.64 &  94.44 &  94.9 &  94.66\\
+ \hline
+ Struct. and M. edges & 92.83 & 95.3 &  94.41 &  94.18\\
+ \hline
+ Pixels and edges & 96.2 & 96.05 &  96.32 & 96.19\\
+ \hline
+  \end{tabular}
+  \label{tab:extab3}
+\end{table}
+
+
+\section{Discussion}
+All neural nodes consist of standard MLP type neurons. As it was mentioned NN are gradually increasing the number of hidden layers. All experiments were conducted on MNIST database.
+This database contains a training set of 60,000 images  and  a  test  set  of  10,000  images.  All  digits are size-normalized  and  centered  in  a  28  x  28  image.  The training  set  was  divided  in  50,000  patterns  for  training (5,000 images per digit) and 10,000 (1,000 per digit) for validation. Results from the first table show that for NN without hidden layer, extracted features have lower accuracy than the original approach. However, the combination of Structural feature and modified edges has even better accuracy than the original. The following tables prove that there is no improvement of perfomance with extracted features. Although in features "Pixels and edges" and "PCA with edges" in the first table, there is not enough neural connection to process extracted information in order to create satisfactory accuracy, on the other hand in the following tables these features bring little less accuracy than the original approach. These features are practically the only ones that are able to compete with the original NN. Eventhough all tested features failed in our tests with larger scale NN, there is a possibility that some feature which was not tested will be able to describe this dataset better and achieve a better performance. All experiments were repeated 3 times. 
+
+\section{Conclusion}
+The findings in this paper show that for NN without hidden layer there exists a better perfoming feature than the standard approach. On larger scale NN we have not found any feature that would surpass the original approach. We have tested many features and their combinations, but none of them excelled in any way. For that reason we would not suggest to use special features without a knowledge of our dataset.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references.bib}{}
+\end{document}

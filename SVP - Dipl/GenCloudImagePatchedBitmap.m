@@ -68,13 +68,33 @@ for i = 1:size(metaballs, 1)
         + cloud_bitmap(~shadow_clipY, ~shadow_clipX, :);
 end
     ww = white .* ones(H,W,C);
+    
+    sigma = 2;
+    G = fspecial('gaussian',[3*sigma+1 3*sigma+1], sigma);
+    %# Filter it
+    shadow_mask = imfilter(shadow_mask,G,'same');
+    cloud_mask = imfilter(cloud_mask, G, 'same');
+    
     shadow_mask = uint8(ww .* shadow_mask);
     output_cloud_mask = uint8(ww .* cloud_mask);
+    
+%     shade_im = noiseonf([H,W], 5);
+%     shade_im = shade_im - min(min(shade_im));
+%     min_shade_im = mean(mean(shade_im))*1.2;
+%     shade_im_mask = shade_im < min_shade_im;
+%     shade_im = (shade_im - min_shade_im )/ (max(max(shade_im)) - min_shade_im );
+%     shade_im = shade_im * 255;
+%     shade_im(shade_im_mask) = 0;
+%     shade_im = uint8(shade_im);
+%     shade_im = repmat(shade_im, 1,1,C);
+    
     alpha = 0.6;
     beta = betasigm(cloud_mask);
-    betaimg = uint8( beta .* double(img) );
+    betaimg = uint8( max(beta) .* double(img) );
     betashw = uint8( alpha * (1-beta).* double(shadow_mask) );
     output_img = output_cloud_mask + betaimg - betashw;
+    
+    %output_img = 0.4 * output_img + 0.6*shade_im;
 end
 
 function y = betasigm(x)

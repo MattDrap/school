@@ -1,0 +1,13 @@
+fmask codes
+-------------------------
+0 => clear land pixel
+
+1 => clear water pixel
+
+2 => cloud shadow
+
+3 => snow
+
+4 => cloud
+
+255 => no observation

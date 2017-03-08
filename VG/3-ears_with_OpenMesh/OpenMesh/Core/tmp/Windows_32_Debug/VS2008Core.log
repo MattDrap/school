@@ -1,0 +1,73 @@
+﻿Build started 11/14/2014 9:05:51 AM.
+     1>Project "D:\src\OpenMesh-3.1\src\OpenMesh\Core\VS2008Core.vcxproj" on node 2 (rebuild target(s)).
+     1>InitializeBuildStatus:
+         Creating "tmp\Windows_32_Debug\Core.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I..\.. /Zi /nologo /W3 /WX- /Od /Oy- /D UNICODE /D WIN32 /D QT_LARGEFILE_SUPPORT /D _USE_MATH_DEFINES /D NOMINMAX /D QT_THREAD_SUPPORT /D QT_WEBKIT_LIB /D QT_SCRIPT_LIB /D QT_SQL_LIB /D QT_XML_LIB /D QT_OPENGL_LIB /D QT_GUI_LIB /D QT_NETWORK_LIB /D QT_CORE_LIB /Gm- /EHsc /MDd /GS- /fp:precise /Zc:wchar_t- /Zc:forScope /GR /Fo"tmp\Windows_32_Debug\\" /Fd".\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Mesh\ArrayKernel.cc Mesh\BaseKernel.cc Utils\BaseProperty.cc IO\reader\BaseReader.cc IO\writer\BaseWriter.cc IO\BinaryHelper.cc Utils\Endian.cc IO\IOManager.cc IO\reader\OBJReader.cc IO\writer\OBJWriter.cc IO\reader\OFFReader.cc IO\writer\OFFWriter.cc IO\OMFormat.cc IO\reader\OMReader.cc System\omstream.cc IO\writer\OMWriter.cc IO\reader\PLYReader.cc IO\writer\PLYWriter.cc Mesh\PolyConnectivity.cc IO\reader\STLReader.cc IO\writer\STLWriter.cc Mesh\TriConnectivity.cc -Zm200 -w34100 -w34189 -Zm200 -w34100 -w34189 -w34100 -w34189 
+         ArrayKernel.cc
+         BaseKernel.cc
+         BaseProperty.cc
+         BaseReader.cc
+         BaseWriter.cc
+         BinaryHelper.cc
+         Endian.cc
+         IOManager.cc
+         OBJReader.cc
+         OBJWriter.cc
+         OFFReader.cc
+         OFFWriter.cc
+         OMFormat.cc
+         OMReader.cc
+         omstream.cc
+         OMWriter.cc
+         PLYReader.cc
+         PLYWriter.cc
+         PolyConnectivity.cc
+         STLReader.cc
+     1>IO\reader\STLReader.cc(457): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : see declaration of 'fopen'
+         Generating Code...
+         Compiling...
+         STLWriter.cc
+     1>IO\writer\STLWriter.cc(145): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : see declaration of 'fopen'
+     1>IO\writer\STLWriter.cc(262): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : see declaration of 'fopen'
+         TriConnectivity.cc
+         Generating Code...
+       MakeDirsForLib:
+         Creating directory "D:\src\OpenMesh-3.1\src\OpenMesh\Core\lib".
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(1151,5): warning MSB8012: TargetPath(D:\src\OpenMesh-3.1\src\OpenMesh\Core\.\Core.lib) does not match the Library's OutputFile property value (D:\src\OpenMesh-3.1\src\OpenMesh\Core\lib\libOpenMeshCored.lib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(1153,5): warning MSB8012: TargetName(Core) does not match the Library's OutputFile property value (libOpenMeshCored). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"D:\src\OpenMesh-3.1\src\OpenMesh\Core\\lib\libOpenMeshCored.lib" /NOLOGO tmp\Windows_32_Debug\ArrayKernel.obj
+         tmp\Windows_32_Debug\BaseKernel.obj
+         tmp\Windows_32_Debug\BaseProperty.obj
+         tmp\Windows_32_Debug\BaseReader.obj
+         tmp\Windows_32_Debug\BaseWriter.obj
+         tmp\Windows_32_Debug\BinaryHelper.obj
+         tmp\Windows_32_Debug\Endian.obj
+         tmp\Windows_32_Debug\IOManager.obj
+         tmp\Windows_32_Debug\OBJReader.obj
+         tmp\Windows_32_Debug\OBJWriter.obj
+         tmp\Windows_32_Debug\OFFReader.obj
+         tmp\Windows_32_Debug\OFFWriter.obj
+         tmp\Windows_32_Debug\OMFormat.obj
+         tmp\Windows_32_Debug\OMReader.obj
+         tmp\Windows_32_Debug\omstream.obj
+         tmp\Windows_32_Debug\OMWriter.obj
+         tmp\Windows_32_Debug\PLYReader.obj
+         tmp\Windows_32_Debug\PLYWriter.obj
+         tmp\Windows_32_Debug\PolyConnectivity.obj
+         tmp\Windows_32_Debug\STLReader.obj
+         tmp\Windows_32_Debug\STLWriter.obj
+         tmp\Windows_32_Debug\TriConnectivity.obj
+         VS2008Core.vcxproj -> D:\src\OpenMesh-3.1\src\OpenMesh\Core\.\Core.lib
+       FinalizeBuildStatus:
+         Deleting file "tmp\Windows_32_Debug\Core.unsuccessfulbuild".
+         Touching "tmp\Windows_32_Debug\Core.lastbuildstate".
+     1>Done Building Project "D:\src\OpenMesh-3.1\src\OpenMesh\Core\VS2008Core.vcxproj" (rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:14.66

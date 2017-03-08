@@ -14,3 +14,18 @@
 *.npts
 *.tif
 *.db
+*.tfw
+*.dll
+*.exe
+*.blg
+*.bbl
+*.aux
+*.cls
+SVP - Dipl/Data/urban_dynamic_v3.0/
+*.ilk
+*.suo
+*.pdb
+*.obj
+*.user
+*.svg
+*.lib
